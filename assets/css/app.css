@@ -1,0 +1,33 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* This file is for your main application CSS */
+
+.themed {
+  @apply bg-white dark:bg-gray-800 dark:text-white;
+
+  a {
+    @apply dark:text-white;
+  }
+
+  span {
+    @apply dark:bg-white bg-gray-800;
+  }
+
+  .container {
+    @apply p-4 rounded-sm bg-slate-200 dark:bg-slate-700;
+  }
+}
+
+.brand-logo {
+  @apply text-[20px];
+}
+
+.paint-order {
+  paint-order: stroke fill;
+
+  /* https://caniuse.com/mdn-css_properties_paint-order */
+  /* default is paint-order: fill stroke */
+  /* mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/paint-order */
+}

@@ -1,0 +1,28 @@
+<header class="px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+    <div class="flex items-center gap-4 paint-order brand-logo">
+      <a href="/">
+        TLDR.GOV
+      </a>
+      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6 text-[10px]">
+        ...what are they up to?
+      </p>
+    </div>
+    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+      <div class="flex items-center cursor-pointer">
+        <div class="sun-selector hidden dark:inline">
+          <.icon name="hero-sun" class="h-5 w-5 bg-transparent dark:bg-white" />
+        </div>
+        <div class="moon-selector inline dark:hidden">
+          <.icon name="hero-moon" class="h-5 w-5 bg-gray-900 dark:bg-transparent" />
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<main>
+  <div>
+    <.flash_group flash={@flash} />
+    <%= @inner_content %>
+  </div>
+</main>
