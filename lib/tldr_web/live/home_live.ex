@@ -2,7 +2,10 @@ defmodule TldrWeb.HomeLive do
   use TldrWeb, :live_view
 
   import TldrWeb.PageComponents
-  import TldrWeb.Home.SidebarSection
+  # import TldrWeb.Home.SidebarSection
+
+  alias Tldr.Bills.Bill
+  alias TldrWeb.Helpers.GlobalHelpers
 
   @impl true
   def render(assigns) do
@@ -28,7 +31,24 @@ defmodule TldrWeb.HomeLive do
           <div class="col-span-12 sm:col-span-12 lg:col-span-4 xxl:col-span-4 xs:m-0">
             <.content_container>
               <.desktop_div>
-                Upcoming Votes
+                <.h4><%= @congress.name %> Recent bills</.h4>
+                <ul>
+                  <%= for bill <- @bills do %>
+                    <li class="text-xs my-4 border rounded-sm px-2">
+                      <div class="flex justify-between items-center text-[10px] gap-x-8">
+                        <div class="font-semibold">
+                          <%= action_text(bill) %>
+                        </div>
+                        <div>
+                          <%= action_date(bill) %>
+                        </div>
+                      </div>
+                      <div class="text-[10px] mt-1">
+                        <%= bill.title %>
+                      </div>
+                    </li>
+                  <% end %>
+                </ul>
               </.desktop_div>
             </.content_container>
           </div>
@@ -40,6 +60,16 @@ defmodule TldrWeb.HomeLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    ok(socket)
+    socket
+    |> assign(
+      bills: Tldr.Bills.list_bills(),
+      congress: Tldr.Congresses.get_latest_congress!(1)
+    )
+    |> ok()
   end
+
+  defp action_text(%Bill{latest_action: action}), do: action["text"]
+
+  defp action_date(%Bill{latest_action: action}),
+    do: GlobalHelpers.standardize_date(action["actionDate"])
 end

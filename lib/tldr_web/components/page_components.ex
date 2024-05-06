@@ -207,6 +207,9 @@ defmodule TldrWeb.PageComponents do
     """
   end
 
+  attr(:class, :string, required: false, default: "")
+  slot(:inner_block, required: true)
+
   def h4(assigns) do
     ~H"""
     <h5 class={"text-gr-4 font-semibold #{@class}"}>
