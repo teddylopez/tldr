@@ -35,4 +35,13 @@ defmodule Tldr.Api.CongressGov do
     |> Tldr.CongressGov.Congress.to_map()
     |> Tldr.Congresses.create_congress()
   end
+
+  def import_congress_members() do
+    %{"members" => list} = get_data("/member")
+
+    list
+    |> Enum.map(&Tldr.CongressGov.Member.new(&1))
+    |> Enum.map(&Tldr.CongressGov.Member.to_map(&1))
+    |> Enum.map(&Tldr.CongressMembers.create_congress_member(&1))
+  end
 end

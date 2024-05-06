@@ -63,7 +63,7 @@ defmodule TldrWeb.HomeLive do
     socket
     |> assign(
       bills: Tldr.Bills.list_bills(),
-      congress: Tldr.Congresses.get_latest_congress!(1)
+      congress: Tldr.Congresses.get_latest_congress!()
     )
     |> ok()
   end

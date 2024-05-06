@@ -15,9 +15,7 @@ defmodule Tldr.CongressGov.Congress do
             end_year: nil,
             sessions: %{},
             update_date: nil,
-            url: nil,
-            inserted_at: nil,
-            updated_at: nil
+            url: nil
 
   def new(json_data) do
     %__MODULE__{

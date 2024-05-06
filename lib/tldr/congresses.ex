@@ -37,7 +37,7 @@ defmodule Tldr.Congresses do
   """
   def get_congress!(id), do: Repo.get!(Congress, id)
 
-  def get_latest_congress!(id) do
+  def get_latest_congress!() do
     Congress
     |> order_by(desc: :updated_at)
     |> Repo.one!()
