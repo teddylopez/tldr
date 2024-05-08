@@ -5,7 +5,6 @@ defmodule Tldr.CongressGov.Congress do
     :start_year,
     :end_year,
     :sessions,
-    :update_date,
     :url
   ]
 
@@ -14,23 +13,27 @@ defmodule Tldr.CongressGov.Congress do
             start_year: nil,
             end_year: nil,
             sessions: %{},
-            update_date: nil,
             url: nil
 
   def new(json_data) do
     %__MODULE__{
-      number: json_data["number"],
+      number: parse_number(json_data["name"]),
       name: json_data["name"],
       start_year: json_data["startYear"],
       end_year: json_data["endYear"],
       sessions: parse_sessions(json_data) || [],
-      update_date: json_data["updateDate"],
       url: json_data["url"]
     }
   end
 
   def to_map(congress) do
     Map.from_struct(congress)
+  end
+
+  defp parse_number(string) do
+    string
+    |> String.replace(~r/[^0-9]/, "")
+    |> String.to_integer()
   end
 
   def parse_sessions(json_data) do

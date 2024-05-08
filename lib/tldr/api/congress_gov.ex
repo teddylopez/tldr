@@ -7,19 +7,36 @@ defmodule Tldr.Api.CongressGov do
   """
 
   @base_url "https://api.congress.gov/v3"
-  @key System.fetch_env!("CONGRESS_GOV_API_KEY")
+  @key Application.fetch_env!(:tldr, :congress_gov_api_key)
 
-  # Step 3: Make API Request with Access Token
-  def get_data(api_endpoint) do
-    url = "#{@base_url}/#{api_endpoint}?api_key=#{@key}"
-    {:ok, response} = HTTPoison.get(url)
+  def get_data(opts \\ %{}) do
+    endpoint = Map.get(opts, :endpoint, "/")
+    key = Map.get(opts, :key, nil)
+    offset = Map.get(opts, :offset, 0)
+    limit = Map.get(opts, :limit, 250)
+    timeout = Map.get(opts, :timeout, 100_000)
 
-    response.body
-    |> Poison.decode!()
+    url = "#{@base_url}/#{endpoint}?api_key=#{@key}&offset=#{offset}&limit=#{limit}"
+    {:ok, response} = HTTPoison.get(url, [], timeout: timeout)
+
+    response_body = response.body |> Poison.decode!()
+
+    case Map.get(response_body, "pagination") do
+      %{"next" => next_page} ->
+        # If there are more pages, recursively fetch them and concatenate the results
+        next_data =
+          get_data(%{endpoint: endpoint, key: key, offset: offset + limit, limit: limit})
+
+        current_items = Map.get(response_body, key) || []
+        Enum.concat(current_items, next_data)
+
+      _ ->
+        Map.get(response_body, key) || []
+    end
   end
 
   def import_bills() do
-    %{"bills" => list} = get_data("/bill")
+    %{"bills" => list} = get_data(%{endpoint: "/bill", key: "bills"})
 
     list
     |> Enum.map(&Tldr.CongressGov.Bill.new(&1))
@@ -28,18 +45,14 @@ defmodule Tldr.Api.CongressGov do
   end
 
   def import_congresses() do
-    %{"congress" => congress} = get_data("/congress/current")
-
-    congress
-    |> Tldr.CongressGov.Congress.new()
-    |> Tldr.CongressGov.Congress.to_map()
-    |> Tldr.Congresses.create_congress()
+    get_data(%{endpoint: "/congress", key: "congressess"})
+    |> Enum.map(&Tldr.CongressGov.Congress.new(&1))
+    |> Enum.map(&Tldr.CongressGov.Congress.to_map(&1))
+    |> Enum.map(&Tldr.Congresses.create_congress(&1))
   end
 
   def import_congress_members() do
-    %{"members" => list} = get_data("/member")
-
-    list
+    get_data(%{endpoint: "/member", key: "members"})
     |> Enum.map(&Tldr.CongressGov.Member.new(&1))
     |> Enum.map(&Tldr.CongressGov.Member.to_map(&1))
     |> Enum.map(&Tldr.CongressMembers.create_congress_member(&1))

@@ -66,3 +66,6 @@ config :phoenix, :json_library, Jason
 import_config "#{config_env()}.exs"
 
 config :phoenix_live_view, debug_heex_annotations: true
+
+# Set TLDR's environment variables at runtime:
+config :tldr, congress_gov_api_key: System.fetch_env!("CONGRESS_GOV_API_KEY")

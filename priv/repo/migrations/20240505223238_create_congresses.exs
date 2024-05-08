@@ -8,7 +8,6 @@ defmodule Tldr.Repo.Migrations.CreateCongresses do
       add :start_year, :integer, required: true
       add :end_year, :integer, required: true
       add :sessions, :map
-      add :update_date, :naive_datetime, required: true
       add :url, :string, required: true
 
       timestamps(type: :utc_datetime)
