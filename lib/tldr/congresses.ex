@@ -8,102 +8,82 @@ defmodule Tldr.Congresses do
 
   alias Tldr.Congresses.Congress
 
-  @doc """
-  Returns the list of congress.
+  def get_congress!(id), do: Repo.get!(Congress, id)
 
-  ## Examples
-
-      iex> list_congresses()
-      [%Congress{}, ...]
-
-  """
-  def list_congresses do
-    Repo.all(Congress)
+  def list_congresses(params \\ %{}) do
+    build_query(params)
   end
 
-  @doc """
-  Gets a single congress.
+  defp base_query do
+    from(congress in Congress,
+      as: :congress
+    )
+  end
 
-  Raises `Ecto.NoResultsError` if the Congress does not exist.
+  defp build_query(params) do
+    base_query()
+    |> preload_bills(params[:preload_bills])
+    |> sort_by(params[:sort])
+  end
 
-  ## Examples
+  defp preload_bills(query, nil), do: query
 
-      iex> get_congress!(123)
-      %Congress{}
+  defp preload_bills(query, true) do
+    from([congress: congress] in query,
+      preload: :bills
+    )
+  end
 
-      iex> get_congress!(456)
-      ** (Ecto.NoResultsError)
+  defp sort_by(query, %{sort_by: sort_by, sort_order: sort_order}) do
+    case sort_by do
+      :number ->
+        from(congress in query,
+          order_by: [
+            {^sort_order, congress.number}
+          ]
+        )
 
-  """
-  def get_congress!(id), do: Repo.get!(Congress, id)
+      _ ->
+        from(congress in query,
+          order_by: [
+            {^sort_order, ^sort_by}
+          ]
+        )
+    end
+  end
+
+  defp sort_by(query, :latest_congress) do
+    from(congress in query,
+      order_by: [
+        {:desc, congress.number}
+      ],
+      limit: 1
+    )
+  end
 
   def get_latest_congress!() do
     Congress
-    |> order_by(desc: :updated_at)
+    |> order_by(desc: :number)
+    |> limit(1)
     |> Repo.one!()
   end
 
-  @doc """
-  Creates a congress.
-
-  ## Examples
-
-      iex> create_congress(%{field: value})
-      {:ok, %Congress{}}
-
-      iex> create_congress(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_congress(attrs \\ %{}) do
     %Congress{}
     |> Congress.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a congress.
-
-  ## Examples
-
-      iex> update_congress(congress, %{field: new_value})
-      {:ok, %Congress{}}
-
-      iex> update_congress(congress, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_congress(%Congress{} = congress, attrs) do
     congress
     |> Congress.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a congress.
-
-  ## Examples
-
-      iex> delete_congress(congress)
-      {:ok, %Congress{}}
-
-      iex> delete_congress(congress)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_congress(%Congress{} = congress) do
     Repo.delete(congress)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking congress changes.
-
-  ## Examples
-
-      iex> change_congress(congress)
-      %Ecto.Changeset{data: %Congress{}}
-
-  """
   def change_congress(%Congress{} = congress, attrs \\ %{}) do
     Congress.changeset(congress, attrs)
   end

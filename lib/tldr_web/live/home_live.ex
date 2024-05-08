@@ -4,7 +4,7 @@ defmodule TldrWeb.HomeLive do
   import TldrWeb.PageComponents
   # import TldrWeb.Home.SidebarSection
 
-  alias Tldr.Bills.Bill
+  alias Tldr.{Bills.Bill, Congresses, Repo}
   alias TldrWeb.Helpers.GlobalHelpers
 
   @impl true
@@ -33,7 +33,7 @@ defmodule TldrWeb.HomeLive do
               <.desktop_div>
                 <.h4><%= @congress.name %> Recent bills</.h4>
                 <ul>
-                  <%= for bill <- @bills do %>
+                  <%= for bill <- @congress.bills do %>
                     <li class="text-xs my-4 border rounded-sm px-2">
                       <div class="flex justify-between items-center text-[10px] gap-x-8">
                         <div class="font-semibold">
@@ -61,10 +61,7 @@ defmodule TldrWeb.HomeLive do
   @impl true
   def mount(_params, _session, socket) do
     socket
-    |> assign(
-      bills: Tldr.Bills.list_bills(),
-      congress: Tldr.Congresses.get_latest_congress!()
-    )
+    |> assign(congress: latest_congress())
     |> ok()
   end
 
@@ -72,4 +69,12 @@ defmodule TldrWeb.HomeLive do
 
   defp action_date(%Bill{latest_action: action}),
     do: GlobalHelpers.standardize_date(action["actionDate"])
+
+  defp latest_congress do
+    Congresses.list_congresses(%{
+      preload_bills: true,
+      sort: :latest_congress
+    })
+    |> Repo.one()
+  end
 end
