@@ -23,7 +23,9 @@ defmodule Tldr.Bills do
   defp build_query(params) do
     base_query()
     |> filter_by_bill_number(params[:bill_number])
+    |> filter_by_congress_number(params[:congress_number])
     |> preload_congress(params[:preload_congress])
+    |> sort_by(params[:sort])
   end
 
   defp filter_by_bill_number(query, nil), do: query
@@ -40,6 +42,31 @@ defmodule Tldr.Bills do
   defp filter_by_bill_number(query, numbers) when is_list(numbers) do
     from([bill: bill] in query,
       where: bill.number in ^numbers
+    )
+  end
+
+  defp filter_by_congress_number(query, nil), do: query
+
+  defp filter_by_congress_number(query, numbers) when is_list(numbers) do
+    from([bill: bill] in query,
+      where: bill.congress_number in ^numbers
+    )
+  end
+
+  defp filter_by_congress_number(query, number) when is_integer(number) do
+    from([bill: bill] in query,
+      where: bill.congress_number == ^number
+    )
+  end
+
+  defp sort_by(query, nil), do: query
+
+  defp sort_by(query, :latest_bills) do
+    from([bill: bill] in query,
+      order_by: [
+        {:desc, :inserted_at}
+      ],
+      limit: 10
     )
   end
 
