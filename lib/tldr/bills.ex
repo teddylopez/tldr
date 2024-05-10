@@ -8,96 +8,65 @@ defmodule Tldr.Bills do
 
   alias Tldr.Bills.Bill
 
-  @doc """
-  Returns the list of bills.
-
-  ## Examples
-
-      iex> list_bills()
-      [%Bill{}, ...]
-
-  """
-  def list_bills do
-    Repo.all(Bill)
-  end
-
-  @doc """
-  Gets a single bill.
-
-  Raises `Ecto.NoResultsError` if the Bill does not exist.
-
-  ## Examples
-
-      iex> get_bill!(123)
-      %Bill{}
-
-      iex> get_bill!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_bill!(id), do: Repo.get!(Bill, id)
 
-  @doc """
-  Creates a bill.
+  def list_bills(params \\ %{}) do
+    build_query(params)
+  end
 
-  ## Examples
+  defp base_query do
+    from(bill in Bill,
+      as: :bill
+    )
+  end
 
-      iex> create_bill(%{field: value})
-      {:ok, %Bill{}}
+  defp build_query(params) do
+    base_query()
+    |> filter_by_bill_number(params[:bill_number])
+    |> preload_congress(params[:preload_congress])
+  end
 
-      iex> create_bill(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  defp filter_by_bill_number(query, nil), do: query
 
-  """
+  defp filter_by_bill_number(query, number) when is_binary(number),
+    do: filter_by_bill_number(query, String.to_integer(number))
+
+  defp filter_by_bill_number(query, number) when is_integer(number) do
+    from([bill: bill] in query,
+      where: bill.number == ^number
+    )
+  end
+
+  defp filter_by_bill_number(query, numbers) when is_list(numbers) do
+    from([bill: bill] in query,
+      where: bill.number in ^numbers
+    )
+  end
+
+  defp preload_congress(query, nil), do: query
+
+  defp preload_congress(query, true) do
+    from([bill: bill] in query,
+      preload: :congress
+    )
+  end
+
   def create_bill(attrs \\ %{}) do
     %Bill{}
     |> Bill.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a bill.
-
-  ## Examples
-
-      iex> update_bill(bill, %{field: new_value})
-      {:ok, %Bill{}}
-
-      iex> update_bill(bill, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_bill(%Bill{} = bill, attrs) do
     bill
     |> Bill.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a bill.
-
-  ## Examples
-
-      iex> delete_bill(bill)
-      {:ok, %Bill{}}
-
-      iex> delete_bill(bill)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_bill(%Bill{} = bill) do
     Repo.delete(bill)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking bill changes.
-
-  ## Examples
-
-      iex> change_bill(bill)
-      %Ecto.Changeset{data: %Bill{}}
-
-  """
   def change_bill(%Bill{} = bill, attrs \\ %{}) do
     Bill.changeset(bill, attrs)
   end

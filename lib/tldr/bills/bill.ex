@@ -5,6 +5,7 @@ defmodule Tldr.Bills.Bill do
   schema "bills" do
     field :number, :integer
     field :title, :string
+    field :summary, :string
     field :latest_action, :map
     field :origin_chamber, :string
     field :origin_chamber_code, :string
@@ -30,6 +31,7 @@ defmodule Tldr.Bills.Bill do
       :origin_chamber,
       :origin_chamber_code,
       :title,
+      :summary,
       :type,
       :update_date,
       :url

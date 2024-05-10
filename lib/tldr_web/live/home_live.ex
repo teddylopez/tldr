@@ -34,19 +34,21 @@ defmodule TldrWeb.HomeLive do
                 <.h4><%= @congress.name %> Recent bills</.h4>
                 <ul>
                   <%= for bill <- @congress.bills do %>
-                    <li class="text-xs my-4 border rounded-sm px-2">
-                      <div class="flex justify-between items-center text-[10px] gap-x-8">
-                        <div class="font-semibold">
-                          <%= action_text(bill) %>
+                    <.link navigate={~p"/bills/#{bill.number}"}>
+                      <li class="text-xs my-4 border rounded-sm px-2">
+                        <div class="flex justify-between items-center text-[10px] gap-x-8">
+                          <div class="font-semibold">
+                            <%= action_text(bill) %>
+                          </div>
+                          <div>
+                            <%= action_date(bill) %>
+                          </div>
                         </div>
-                        <div>
-                          <%= action_date(bill) %>
+                        <div class="text-[10px] mt-1">
+                          <%= bill.title %>
                         </div>
-                      </div>
-                      <div class="text-[10px] mt-1">
-                        <%= bill.title %>
-                      </div>
-                    </li>
+                      </li>
+                    </.link>
                   <% end %>
                 </ul>
               </.desktop_div>

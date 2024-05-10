@@ -18,6 +18,7 @@ defmodule TldrWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
+    live "/bills/:id", BillLive
   end
 
   # Other scopes may use custom stacks.

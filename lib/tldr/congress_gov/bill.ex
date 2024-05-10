@@ -6,6 +6,7 @@ defmodule Tldr.CongressGov.Bill do
     :origin_chamber,
     :origin_chamber_code,
     :title,
+    :summary,
     :type,
     :update_date,
     :url
@@ -16,21 +17,23 @@ defmodule Tldr.CongressGov.Bill do
             origin_chamber: nil,
             origin_chamber_code: nil,
             title: nil,
+            summary: nil,
             type: nil,
             update_date: nil,
             url: nil
 
-  def new(json_data) do
+  def new(%{bill: bill, summary: summary}) do
     %__MODULE__{
-      congress_number: json_data["congress"],
-      latest_action: json_data["latestAction"],
-      number: json_data["number"],
-      origin_chamber: json_data["originChamber"],
-      origin_chamber_code: json_data["originChamberCode"],
-      title: json_data["title"],
-      type: json_data["type"],
-      update_date: json_data["updateDateIncludingText"],
-      url: json_data["url"]
+      congress_number: bill["congress"],
+      latest_action: bill["latestAction"],
+      number: bill["number"],
+      origin_chamber: bill["originChamber"],
+      origin_chamber_code: bill["originChamberCode"],
+      title: bill["title"],
+      summary: summary,
+      type: bill["type"],
+      update_date: bill["updateDateIncludingText"],
+      url: bill["url"]
     }
   end
 
