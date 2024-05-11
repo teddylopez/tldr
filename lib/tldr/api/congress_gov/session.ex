@@ -1,4 +1,4 @@
-defmodule Tldr.CongressGov.Session do
+defmodule Tldr.Api.CongressGov.Session do
   @enforce_keys [
     :number,
     :chamber,

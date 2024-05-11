@@ -1,4 +1,4 @@
-defmodule Tldr.CongressGov.Term do
+defmodule Tldr.Api.CongressGov.Term do
   @enforce_keys [
     :chamber,
     :start_year,

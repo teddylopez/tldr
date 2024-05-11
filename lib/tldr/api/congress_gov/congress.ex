@@ -1,4 +1,4 @@
-defmodule Tldr.CongressGov.Congress do
+defmodule Tldr.Api.CongressGov.Congress do
   @enforce_keys [
     :number,
     :name,
@@ -38,7 +38,7 @@ defmodule Tldr.CongressGov.Congress do
 
   def parse_sessions(json_data) do
     json_data["sessions"]
-    |> Enum.map(&Tldr.CongressGov.Session.new/1)
-    |> Enum.map(&Tldr.CongressGov.Session.to_map/1)
+    |> Enum.map(&Tldr.Api.CongressGov.Session.new/1)
+    |> Enum.map(&Tldr.Api.CongressGov.Session.to_map/1)
   end
 end

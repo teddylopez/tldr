@@ -1,4 +1,4 @@
-defmodule Tldr.CongressGov.Member do
+defmodule Tldr.Api.CongressGov.Member do
   @enforce_keys [
     :bio_id,
     :name,
@@ -40,7 +40,7 @@ defmodule Tldr.CongressGov.Member do
     %{"item" => list} = json_data["terms"]
 
     list
-    |> Enum.map(&Tldr.CongressGov.Term.new/1)
-    |> Enum.map(&Tldr.CongressGov.Term.to_map/1)
+    |> Enum.map(&Tldr.Api.CongressGov.Term.new/1)
+    |> Enum.map(&Tldr.Api.CongressGov.Term.to_map/1)
   end
 end

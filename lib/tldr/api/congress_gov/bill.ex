@@ -1,4 +1,4 @@
-defmodule Tldr.CongressGov.Bill do
+defmodule Tldr.Api.CongressGov.Bill do
   @enforce_keys [
     :congress_number,
     :latest_action,

@@ -42,14 +42,19 @@ defmodule Tldr.Api.CongressGov do
       bill_summary = find_summary(summaries, bill)
       [%{bill: bill, summary: get_in(bill_summary, ["text"])} | acc]
     end)
-    |> Enum.map(&Tldr.CongressGov.Bill.new(&1))
-    |> Enum.map(&Tldr.CongressGov.Bill.to_map(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Bill.new(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Bill.to_map(&1))
     |> Enum.map(&Tldr.Bills.create_bill(&1))
   end
 
   defp fetch_bills(congress_number \\ 118) do
-    bills_task = Task.async(fn -> get_data(%{endpoint: "/bill/#{congress_number}", key: "bills"}) end)
-    summaries_task = Task.async(fn -> get_data(%{endpoint: "/summaries/#{congress_number}", key: "summaries"}) end)
+    bills_task =
+      Task.async(fn -> get_data(%{endpoint: "/bill/#{congress_number}", key: "bills"}) end)
+
+    summaries_task =
+      Task.async(fn ->
+        get_data(%{endpoint: "/summaries/#{congress_number}", key: "summaries"})
+      end)
 
     {Task.await(bills_task, :infinity), Task.await(summaries_task, :infinity)}
   end
@@ -66,15 +71,15 @@ defmodule Tldr.Api.CongressGov do
 
   def import_congresses() do
     get_data(%{endpoint: "/congress", key: "congresses"})
-    |> Enum.map(&Tldr.CongressGov.Congress.new(&1))
-    |> Enum.map(&Tldr.CongressGov.Congress.to_map(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Congress.new(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Congress.to_map(&1))
     |> Enum.map(&Tldr.Congresses.create_congress(&1))
   end
 
   def import_congress_members() do
     get_data(%{endpoint: "/member", key: "members"})
-    |> Enum.map(&Tldr.CongressGov.Member.new(&1))
-    |> Enum.map(&Tldr.CongressGov.Member.to_map(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Member.new(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Member.to_map(&1))
     |> Enum.map(&Tldr.CongressMembers.create_congress_member(&1))
   end
 end
