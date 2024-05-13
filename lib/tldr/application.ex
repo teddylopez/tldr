@@ -7,6 +7,9 @@ defmodule Tldr.Application do
 
   @impl true
   def start(_type, _args) do
+    # Load environment variables from .env file
+    EnvLoader.load_env()
+
     children = [
       TldrWeb.Telemetry,
       Tldr.Repo,
