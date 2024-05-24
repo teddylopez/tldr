@@ -37,5 +37,5 @@ defmodule Tldr.Api.CongressGov.Bill do
     }
   end
 
-  def to_map(congress_bilL), do: Map.from_struct(congress_bilL)
+  def to_map(congress_bill), do: Map.from_struct(congress_bill)
 end

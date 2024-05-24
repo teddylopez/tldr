@@ -82,4 +82,11 @@ defmodule Tldr.Api.CongressGov do
     |> Enum.map(&Tldr.Api.CongressGov.Member.to_map(&1))
     |> Enum.map(&Tldr.CongressMembers.create_congress_member(&1))
   end
+
+  def import_amendments(congress_number \\ 118) do
+    get_data(%{endpoint: "/amendment/#{congress_number}", key: "amendments"})
+    |> Enum.map(&Tldr.Api.CongressGov.Amendment.new(&1))
+    |> Enum.map(&Tldr.Api.CongressGov.Amendment.to_map(&1))
+    |> Enum.map(&Tldr.Amendments.create_amendment(&1))
+  end
 end
