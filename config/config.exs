@@ -7,6 +7,44 @@
 # General application configuration
 import Config
 
+# Set TLDR's environment variables at runtime:
+defmodule EnvLoader do
+  @moduledoc """
+  Set environment variables from .env when starting server, handled in application.ex
+  """
+
+  @env_file ".env"
+
+  def load_env do
+    case File.read(@env_file) do
+      {:ok, content} ->
+        content
+        |> String.split("\n")
+        |> Enum.each(&parse_line/1)
+
+        IO.puts("Environment variables loaded!")
+
+      {:error, _} ->
+        IO.puts("Error: Unable to read #{@env_file}")
+    end
+  end
+
+  defp parse_line(line) do
+    case String.split(line, "=", trim: true) do
+      [key, val_with_quotes] ->
+        key = String.trim(key)
+        val = String.trim(val_with_quotes, "\"")
+        System.put_env(key, val)
+
+      _ ->
+        nil
+    end
+  end
+end
+
+config :tldr, congress_gov_api_key: System.fetch_env!("CONGRESS_GOV_API_KEY")
+config :tldr, open_secrets_api_key: System.fetch_env!("OPEN_SECRETS_API_KEY")
+
 config :tldr,
   ecto_repos: [Tldr.Repo],
   generators: [timestamp_type: :utc_datetime]
@@ -66,6 +104,3 @@ config :phoenix, :json_library, Jason
 import_config "#{config_env()}.exs"
 
 config :phoenix_live_view, debug_heex_annotations: true
-
-# Set TLDR's environment variables at runtime:
-config :tldr, congress_gov_api_key: System.fetch_env!("CONGRESS_GOV_API_KEY")
