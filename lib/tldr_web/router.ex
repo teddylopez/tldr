@@ -19,6 +19,7 @@ defmodule TldrWeb.Router do
 
     live "/", HomeLive
     live "/bills/:id", BillLive
+    live "/issuers", IssuersLive
   end
 
   # Other scopes may use custom stacks.
