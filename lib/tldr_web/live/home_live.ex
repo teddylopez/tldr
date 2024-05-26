@@ -24,7 +24,7 @@ defmodule TldrWeb.HomeLive do
               </.mobile_div>
 
               <.desktop_div>
-                Welcome to tldr.gov
+                <%= dgettext("home", "welcome") %> Welcome to tldr.gov
               </.desktop_div>
             </.content_container>
           </div>
@@ -63,6 +63,7 @@ defmodule TldrWeb.HomeLive do
   @impl true
   def mount(_params, _session, socket) do
     congress = latest_congress()
+
     socket
     |> assign(congress: congress, latest_bills: latest_bills(congress.number))
     |> ok()

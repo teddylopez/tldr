@@ -34,7 +34,7 @@ defmodule TldrWeb.BillLive do
             <.content_container>
               <%= @bill.congress.name %>
               <.desktop_div>
-                <.h4>Sponsors</.h4>
+                <.h4><%= dgettext("bills", "Sponsors") %></.h4>
                 <ul></ul>
               </.desktop_div>
             </.content_container>

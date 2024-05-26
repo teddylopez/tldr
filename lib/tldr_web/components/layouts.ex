@@ -9,6 +9,7 @@ defmodule TldrWeb.Layouts do
   `use TldrWeb, :live_view`.
   """
   use TldrWeb, :html
+  import TldrWeb.Gettext
 
   embed_templates "layouts/*"
 end

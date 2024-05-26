@@ -14,9 +14,9 @@ defmodule TldrWeb.Components.Issuers.MostTradedTable do
         <thead class="bg-white dark:bg-gray-600" style="position: sticky; top: 0; z-index: 5;">
           <tr>
             <th></th>
-            <th>Most Traded</th>
-            <th>Trades</th>
-            <th>Politicians</th>
+            <th><%= dgettext("issuers", "Most Traded") %></th>
+            <th><%= dgettext("default", "Trades") %></th>
+            <th><%= dgettext("default", "Politicians") %></th>
           </tr>
         </thead>
         <tbody>

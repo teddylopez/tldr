@@ -51,6 +51,7 @@ defmodule TldrWeb do
 
   def live_view do
     quote do
+      import TldrWeb.Gettext
       import Tldr.CustomTooling
 
       use Phoenix.LiveView,
@@ -62,6 +63,7 @@ defmodule TldrWeb do
 
   def live_component do
     quote do
+      import TldrWeb.Gettext
       import Tldr.CustomTooling
       use Phoenix.LiveComponent
 
@@ -71,6 +73,7 @@ defmodule TldrWeb do
 
   def html do
     quote do
+      import TldrWeb.Gettext
       use Phoenix.Component
 
       # Import convenience functions from controllers
