@@ -37,7 +37,7 @@ defmodule Tldr.MixProject do
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:phoenix_live_view, "~> 0.20.2"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
@@ -67,7 +67,10 @@ defmodule Tldr.MixProject do
       {:poison, "~> 5.0"},
 
       # For HTTP requests
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+
+      # Formatting numbers
+      {:number, "~> 1.0"}
     ]
   end
 
