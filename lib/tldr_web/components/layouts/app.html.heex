@@ -6,7 +6,8 @@
           TLDR.GOV
         </span>
       </.link>
-      <p class="bg-brand/10 text-brand rounded-lg px-2 font-medium leading-6 text-[10px] border-[0.5px] border-brand">
+      <p class="bg-brand/10 text-brand rounded-lg px-2 font-medium
+                leading-6 text-[10px] border-[0.5px] border-brand">
         ...what are they up to?
       </p>
     </div>
@@ -17,10 +18,10 @@
         </.link>
       </div>
       <div class="flex items-center cursor-pointer">
-        <div class="sun-selector hidden dark:inline">
+        <div class="sun-selector hidden dark:inline" phx-hook="AppThemes" id="light-theme-toggle">
           <.icon name="hero-sun" class="h-5 w-5 bg-transparent dark:bg-white" />
         </div>
-        <div class="moon-selector inline dark:hidden">
+        <div class="moon-selector inline dark:hidden" phx-hook="AppThemes" id="dark-theme-toggle">
           <.icon name="hero-moon" class="h-5 w-5 bg-gray-900 dark:bg-transparent" />
         </div>
       </div>

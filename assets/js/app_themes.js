@@ -1,21 +1,19 @@
-const sunIcon = document.querySelector('.sun-selector');
-const moonIcon = document.querySelector('.moon-selector');
-const userTheme = localStorage.getItem('theme') || '';
-const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+let methods = {};
 
-const toggleTheme = () => {
-  const isDarkMode = document.documentElement.classList.contains('dark');
-  document.documentElement.classList.toggle('dark', !isDarkMode);
-  const newTheme = isDarkMode ? 'light' : 'dark';
-  localStorage.setItem('theme', newTheme);
-};
+methods.toggleTheme = function ($this) {
+  $this.el.addEventListener('click', () => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', !isDarkMode);
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+  });
+}
 
-sunIcon.addEventListener('click', toggleTheme);
-moonIcon.addEventListener('click', toggleTheme);
-
-const initialThemeCheck = () => {
+methods.initialThemeCheck = function () {
+  const userTheme = localStorage.getItem('theme') || '';
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const prefersDarkMode = (userTheme === 'dark' || (!userTheme && systemTheme));
   document.documentElement.classList.toggle('dark', prefersDarkMode);
 };
 
-initialThemeCheck();
+exports.methods = methods;
